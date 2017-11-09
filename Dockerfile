@@ -1,8 +1,8 @@
 FROM ubuntu:trusty-20170817
 
 RUN groupadd -g 1117 tdr && useradd -u 1117 -g tdr -m tdr && \
-    mkdir -p /etc/canadiana /var/log/tdr && ln -s /home/tdr /etc/canadiana/tdr && chown tdr.tdr /var/log/tdr && \
-    apt-get update && apt-get install -y cpanminus build-essential libxml-libxml-perl libxml-libxslt-perl && apt-get clean
+    mkdir -p /etc/canadiana /var/log/tdr /var/lock/tdr && ln -s /home/tdr /etc/canadiana/tdr && chown tdr.tdr /var/log/tdr /var/lock/tdr && \
+    apt-get update && apt-get install -y cpanminus build-essential libxml-libxml-perl libxml-libxslt-perl rsync && apt-get clean
 
 WORKDIR /home/tdr
 COPY cpanfile* *.conf /home/tdr/
