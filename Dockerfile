@@ -9,6 +9,8 @@ COPY cpanfile* *.conf /home/tdr/
 ENV PERL_CPANM_OPT "--mirror http://feta.office.c7a.ca/stacks/c7a-perl-devel/ --mirror http://www.cpan.org/"
 RUN cpanm -n --installdeps . && rm -rf /root/.cpanm || (cat /root/.cpanm/work/*/build.log && exit 1)
 
+RUN curl -OL http://feta.office.c7a.ca/deploy/Archive-BagIt-0.053.1.tar.gz && cpanm Archive-BagIt-0.053.1.tar.gz
+
 USER tdr
 
 

@@ -1,5 +1,5 @@
 # 
-requires 'CIHM::TDR';
+requires 'CIHM::TDR', '0.10';
 requires 'MooseX::App';
 requires 'Log::Log4perl';
 requires 'MooseX::Log::Log4perl';
@@ -8,6 +8,7 @@ requires 'MIME::Types';
 requires 'Class::Singleton';
 requires 'Config::General';
 requires 'DateTime';
+requires 'DateTime::Format::MySQL';
 requires 'JSON';
 requires 'Types::Standard';
 requires 'Role::REST::Client';
@@ -16,6 +17,7 @@ requires 'Crypt::JWT';
 requires 'Switch';
 requires 'File::Copy::Recursive';
 requires 'Archive::BagIt';
+requires 'Archive::BagIt::App';
 requires 'Coro::Semaphore';
 requires 'AnyEvent';
 requires 'AnyEvent::Fork';
