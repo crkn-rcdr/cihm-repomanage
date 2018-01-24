@@ -1,5 +1,5 @@
 # 
-requires 'CIHM::TDR', '0.10';
+requires 'CIHM::TDR', '0.11';
 requires 'MooseX::App';
 requires 'Log::Log4perl';
 requires 'MooseX::Log::Log4perl';
@@ -16,7 +16,7 @@ requires 'Filesys::Df';
 requires 'Crypt::JWT';
 requires 'Switch';
 requires 'File::Copy::Recursive';
-requires 'Archive::BagIt';
+requires 'Archive::BagIt','0.053.3';
 requires 'Archive::BagIt::App';
 requires 'Coro::Semaphore';
 requires 'AnyEvent';
