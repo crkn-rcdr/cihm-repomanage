@@ -2,8 +2,9 @@ FROM ubuntu:trusty-20190515
 
 RUN groupadd -g 1117 tdr && useradd -u 1117 -g tdr -m tdr && \
     mkdir -p /etc/canadiana /var/log/tdr /var/lock/tdr && ln -s /home/tdr /etc/canadiana/tdr && chown tdr.tdr /var/log/tdr /var/lock/tdr && \
-    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq cpanminus build-essential libxml-libxml-perl libxml-libxslt-perl libio-aio-perl rsync cron postfix && apt-get clean
-
+    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq cpanminus build-essential libxml-libxml-perl libxml-libxslt-perl libio-aio-perl rsync cron postfix && \
+    ln -fs /usr/share/zoneinfo/America/Toronto /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata && \
+    apt-get clean
 
 ENV TINI_VERSION 0.18.0
 RUN set -ex; \

@@ -30,19 +30,19 @@ cronandmail ()
 
 
 
-echo "MAILTO=rmcormond@crkn.ca" > /etc/cron.d/metadatabus
-echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> /etc/cron.d/metadatabus
+echo "MAILTO=sysadmin@canadiana.ca" > /etc/cron.d/repomanage
+echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> /etc/cron.d/repomanage
 
 
 if [ "$1" = 'repomanage' ]; then
-	cat <<-MBCRON >>/etc/cron.d/metadatabus
+	cat <<-RMCRON >>/etc/cron.d/repomanage
 # Repository Validation each evening
 47 16 * * * tdr /bin/bash -c "date ; tdr verify --timelimit=43200 --maxprocs=8 ; date ; tdr walk ; date"
 # Empty the trashcans every 6 hours
 34 5/6 * * * tdr /bin/bash -c "find /cihmz*/repository/trashcan/ -mindepth 1 -maxdepth 1 -mmin +360 -exec rm -rf {} \;"
 # Replication check every 10 minutes (find work and put in queue, then run rsync to add to repository)
 0-59/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-replicate"
-MBCRON
+RMCRON
         cronandmail
 else
 	# Otherwise run what was asked as the 'tdr' user
