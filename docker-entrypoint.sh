@@ -30,7 +30,7 @@ cronandmail ()
 
 
 
-echo "MAILTO=sysadmin@canadiana.ca" > /etc/cron.d/repomanage
+echo "MAILTO=sysadmin@c7a.ca" > /etc/cron.d/repomanage
 echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> /etc/cron.d/repomanage
 
 
