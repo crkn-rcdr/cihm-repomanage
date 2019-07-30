@@ -1,5 +1,3 @@
-# 
-requires 'CIHM::TDR', '0.12';
 requires 'MooseX::App';
 requires 'Log::Log4perl';
 requires 'MooseX::Log::Log4perl';

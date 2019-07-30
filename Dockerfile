@@ -29,14 +29,12 @@ RUN set -ex; \
 
 
 WORKDIR /home/tdr
-COPY cpanfile* *.conf /home/tdr/
-COPY aliases /etc/aliases
-COPY docker-entrypoint.sh /
+COPY . .
+RUN mv aliases /etc/alises && mv docker-entrypoint.sh /
 
 ENV PERL_CPANM_OPT "--mirror http://pinto.c7a.ca/stacks/c7a-perl-devel/ --mirror http://www.cpan.org/"
-RUN cpanm -n --installdeps . && rm -rf /root/.cpanm || (cat /root/.cpanm/work/*/build.log && exit 1)
-
-#RUN curl -OL http://pinto.c7a.ca/deploy/CIHM-TDR-0.12.tar.gz &&  cpanm CIHM-TDR-0.12.tar.gz
+RUN cpanm -n --installdeps . && rm -rf /root/.cpanm || \
+    (cat /root/.cpanm/work/*/build.log && exit 1)
 
 ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
 USER root

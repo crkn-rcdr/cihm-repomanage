@@ -1,0 +1,3 @@
+[submodule "CIHM-TDR"]
+	path = CIHM-TDR
+	url = git@github.com:crkn-rcdr/CIHM-TDR.git

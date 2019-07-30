@@ -13,6 +13,13 @@
 
 set -e
 
+export PERL5LIB=/home/tdr/CIHM-TDR
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/tdr/CIHM-TDR/bin
+
+# This seems to be owned by wrong user from time to time.
+mkdir -p /var/lock/tdr/
+chown tdr.tdr /var/lock/tdr/
+
 cronandmail ()
 {
 	# Postfix setup
@@ -31,7 +38,8 @@ cronandmail ()
 
 
 echo "MAILTO=sysadmin@c7a.ca" > /etc/cron.d/repomanage
-echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> /etc/cron.d/repomanage
+echo "PATH=$PATH" >> /etc/cron.d/repomanage
+echo "PERL5LIB=$PERL5LIB" >> /etc/cron.d/repomanage
 
 
 if [ "$1" = 'repomanage' ]; then
@@ -45,6 +53,8 @@ if [ "$1" = 'repomanage' ]; then
 RMCRON
         cronandmail
 else
-	# Otherwise run what was asked as the 'tdr' user
-	exec sudo -u tdr "$@"
+    # Otherwise run what was asked as the 'tdr' user
+    echo "export PATH=$PATH" >> /home/tdr/.profile
+    echo "export PERL5LIB=$PERL5LIB" >> /home/tdr/.profile
+    exec sudo -u tdr -i "$@"
 fi
