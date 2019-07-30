@@ -13,7 +13,7 @@
 
 set -e
 
-export PERL5LIB=/home/tdr/CIHM-TDR
+export PERL5LIB=/home/tdr/CIHM-TDR/lib
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/tdr/CIHM-TDR/bin
 
 # This seems to be owned by wrong user from time to time.
