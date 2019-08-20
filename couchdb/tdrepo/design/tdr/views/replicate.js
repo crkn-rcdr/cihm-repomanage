@@ -4,5 +4,6 @@ module.exports = {
     if (doc.type && doc.type === "item_repository" && doc["replicate"]) {
       emit([doc.repository, doc.replicatepriority, doc.owner], null);
     }
-  }
+  },
+  reduce: "_count"
 };

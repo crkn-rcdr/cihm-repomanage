@@ -8,5 +8,6 @@ module.exports = {
         emit([doc.repository, uid[0], doc.pool, uid[1]], filesize);
       }
     }
-  }
+  },
+  reduce: "_stats"
 };
