@@ -57,7 +57,7 @@ RMCRON
 elif [ "$1" = 'swiftmanage' ]; then
 	        cat <<-SRMCRON >>/etc/cron.d/repomanage
 # Repository Validation each evening
-#47 16 * * * tdr /bin/bash -c "date ; tdr verify --timelimit=43200 --maxprocs=8 ; date ; tdr walk ; date"
+47 16 * * * tdr /bin/bash -c "date ; tdr-swiftvalidate --timelimit=43200 ; date ; tdr-swiftwalk ; date"
 # Replication check every 10 minutes (find work and put in queue, then copy to Swift)
 5-59/10 * * * * tdr /bin/bash -c "tdr-swiftreplicationwork ; tdr-swiftreplicate --maxprocs=8"
 SRMCRON
@@ -67,6 +67,12 @@ elif [ "$1" = 'swiftmanagedescending' ]; then
 # Replication check every 10 minutes (check if anything in queue)
 5-59/10 * * * * tdr /bin/bash -c "tdr-swiftreplicate --descending --maxprocs=8"
 SRMDCRON
+        cronandmail
+elif [ "$1" = 'swiftmanageskip' ]; then
+	        cat <<-SRMSCRON >>/etc/cron.d/repomanage
+# Replication check every 10 minutes (check if anything in queue)
+5-59/10 * * * * tdr /bin/bash -c "tdr-swiftreplicate --skip=500 --maxprocs=8"
+SRMSCRON
         cronandmail
 else
     # Otherwise run what was asked as the 'tdr' user
