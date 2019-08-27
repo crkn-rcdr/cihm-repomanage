@@ -54,6 +54,14 @@ if [ "$1" = 'repomanage' ]; then
 0-59/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-replicate"
 RMCRON
         cronandmail
+elif [ "$1" = 'replicate' ]; then
+	cat <<-REPLI >>/etc/cron.d/repomanage
+# Empty the trashcans every 6 hours
+34 5/6 * * * tdr /bin/bash -c "find /cihmz*/repository/trashcan/ -mindepth 1 -maxdepth 1 -mmin +360 -exec rm -rf {} \;"
+# Replication check every 10 minutes (find work and put in queue, then run rsync to add to repository)
+0-59/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-replicate"
+REPLI
+	cronandmail
 elif [ "$1" = 'swiftmanage' ]; then
 	        cat <<-SRMCRON >>/etc/cron.d/repomanage
 # Repository Validation each evening
