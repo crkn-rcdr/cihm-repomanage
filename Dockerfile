@@ -32,7 +32,6 @@ WORKDIR /home/tdr
 COPY cpanfile* *.conf aliases docker-entrypoint.sh /home/tdr/
 RUN mv aliases /etc/alises && mv docker-entrypoint.sh /
 
-#ENV PERL_CPANM_OPT "--mirror http://pinto.c7a.ca/stacks/c7a-perl-devel/ --mirror http://www.cpan.org/"
 RUN cpanm -n --installdeps . && rm -rf /root/.cpanm || \
     (cat /root/.cpanm/work/*/build.log && exit 1)
 
