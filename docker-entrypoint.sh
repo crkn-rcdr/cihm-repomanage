@@ -38,6 +38,12 @@ cronandmail ()
 }
 
 
+echo "export PATH=$PATH" >> /root/.profile
+echo "export PERL5LIB=$PERL5LIB" >> /root/.profile
+
+echo "export PATH=$PATH" >> /home/tdr/.profile
+echo "export PERL5LIB=$PERL5LIB" >> /home/tdr/.profile
+chown tdr.tdr /home/tdr/.profile
 
 echo "MAILTO=sysadmin@c7a.ca" > /etc/cron.d/repomanage
 echo "PATH=$PATH" >> /etc/cron.d/repomanage
@@ -70,12 +76,6 @@ elif [ "$1" = 'swiftmanage' ]; then
 5-59/10 * * * * tdr /bin/bash -c "tdr-swiftreplicationwork ; tdr-swiftreplicate --maxprocs=8"
 SRMCRON
         cronandmail
-elif [ "$1" = 'swiftmanagedescending' ]; then
-	        cat <<-SRMDCRON >>/etc/cron.d/repomanage
-# Replication check every 10 minutes (check if anything in queue)
-5-59/10 * * * * tdr /bin/bash -c "tdr-swiftreplicate --descending --maxprocs=8"
-SRMDCRON
-        cronandmail
 elif [ "$1" = 'swiftmanageskip' ]; then
 	        cat <<-SRMSCRON >>/etc/cron.d/repomanage
 # Replication check every 10 minutes (check if anything in queue)
@@ -84,7 +84,5 @@ SRMSCRON
         cronandmail
 else
     # Otherwise run what was asked as the 'tdr' user
-    echo "export PATH=$PATH" >> /home/tdr/.profile
-    echo "export PERL5LIB=$PERL5LIB" >> /home/tdr/.profile
     exec sudo -u tdr -i "$@"
 fi
