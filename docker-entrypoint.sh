@@ -24,17 +24,22 @@ chown tdr.tdr /var/log/tdr/
 
 cronandmail ()
 {
+
+	# For debugging purposes it is possible to exec into a running container and start rsyslogd to see output of cron.
+    #rsyslogd
+
 	# Postfix setup
 	# needs to be in running container so local randomly generated hostname can be in main.cf
 	debconf-set-selections /home/tdr/postfix-debconf.conf
 	rm /etc/postfix/*.cf
-        dpkg-reconfigure -f noninteractive postfix
-	service postfix start
+    dpkg-reconfigure -f noninteractive postfix
+	# postconf maillog_file=/dev/stdout
+	postfix start
+
 
 	# Cron in foreground	
 	/usr/sbin/cron -f
 
-	# For debugging purposes it is possible to exec into a running container and start rsyslogd to see output of cron.
 }
 
 
@@ -55,7 +60,7 @@ if [ "$1" = 'repomanage' ]; then
 # Repository Validation each evening
 47 16 * * * tdr /bin/bash -c "date ; tdr verify --timelimit=43200 --maxprocs=8 ; date ; tdr walk ; date"
 # Empty the trashcans every 6 hours
-34 5/6 * * * tdr /bin/bash -c "find /cihmz*/repository/trashcan/ -mindepth 1 -maxdepth 1 -mmin +360 -exec rm -rf {} \;"
+34 5,11,17,22 * * * tdr /bin/bash -c "find /cihmz*/repository/trashcan/ -mindepth 1 -maxdepth 1 -mmin +360 -exec rm -rf {} \;"
 # Replication check every 10 minutes (find work and put in queue, then run rsync to add to repository)
 0-59/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-replicate"
 RMCRON
@@ -65,17 +70,17 @@ elif [ "$1" = 'repomanagefrom' ]; then
 # Repository Validation each evening
 47 16 * * * tdr /bin/bash -c "date ; tdr verify --timelimit=43200 --maxprocs=8 ; date ; tdr walk ; date"
 # Empty the trashcans every 6 hours
-34 5/6 * * * tdr /bin/bash -c "find /cihmz*/repository/trashcan/ -mindepth 1 -maxdepth 1 -mmin +360 -exec rm -rf {} \;"
+34 5,11,17,22 * * * tdr /bin/bash -c "find /cihmz*/repository/trashcan/ -mindepth 1 -maxdepth 1 -mmin +360 -exec rm -rf {} \;"
 # Replication check every 10 minutes (find work and put in queue, then run rsync to add to repository)
-0-59/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-swiftreplicate --fromswift"
+*/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-swiftreplicate --fromswift"
 RMCRON
         cronandmail
 elif [ "$1" = 'replicate' ]; then
 	cat <<-REPLI >>/etc/cron.d/repomanage
 # Empty the trashcans every 6 hours
-34 5/6 * * * tdr /bin/bash -c "find /cihmz*/repository/trashcan/ -mindepth 1 -maxdepth 1 -mmin +360 -exec rm -rf {} \;"
+34 5,11,17,22 * * * tdr /bin/bash -c "find /cihmz*/repository/trashcan/ -mindepth 1 -maxdepth 1 -mmin +360 -exec rm -rf {} \;"
 # Replication check every 10 minutes (find work and put in queue, then run rsync to add to repository)
-0-59/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-replicate"
+*/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-replicate"
 REPLI
 	cronandmail
 elif [ "$1" = 'swiftvalidate' ]; then
@@ -87,7 +92,7 @@ SVCRON
 elif [ "$1" = 'swiftreplicate' ]; then
 	        cat <<-SRCRON >>/etc/cron.d/repomanage
 # Replication check every 10 minutes (find work and put in queue, then copy to Swift)
-5-59/10 * * * * tdr /bin/bash -c "tdr-swiftreplicationwork ; tdr-swiftreplicate --maxprocs=8"
+*/10 * * * * tdr /bin/bash -c "tdr-swiftreplicationwork ; tdr-swiftreplicate --maxprocs=8"
 SRCRON
         cronandmail
 else

@@ -2,7 +2,8 @@ FROM buildpack-deps:buster
 
 RUN groupadd -g 1117 tdr && useradd -u 1117 -g tdr -m tdr && \
     mkdir -p /etc/canadiana /var/log/tdr /var/lock/tdr && ln -s /home/tdr /etc/canadiana/tdr && chown tdr.tdr /var/log/tdr /var/lock/tdr && \
-    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq cpanminus build-essential libxml-libxml-perl libxml-libxslt-perl libio-aio-perl libfile-rsync-perl rsync cron postfix && \
+    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq cpanminus build-essential libxml-libxml-perl libxml-libxslt-perl \
+    libio-aio-perl libfile-rsync-perl rsync cron rsyslog postfix mailutils sudo util-linux curl less && \
     ln -fs /usr/share/zoneinfo/America/Toronto /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata && \
     apt-get clean
 
@@ -29,8 +30,8 @@ RUN set -ex; \
 
 
 WORKDIR /home/tdr
-COPY cpanfile* *.conf aliases docker-entrypoint.sh /home/tdr/
-RUN mv aliases /etc/alises && mv docker-entrypoint.sh /
+COPY cpanfile* *.conf /home/tdr/
+COPY aliases /etc/aliases
 
 RUN cpanm -n --installdeps . && rm -rf /root/.cpanm || \
     (cat /root/.cpanm/work/*/build.log && exit 1)
@@ -38,5 +39,6 @@ RUN cpanm -n --installdeps . && rm -rf /root/.cpanm || \
 COPY CIHM-Swift CIHM-Swift
 COPY CIHM-TDR CIHM-TDR
 
+COPY docker-entrypoint.sh /
 ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
 USER root
