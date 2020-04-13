@@ -25,6 +25,12 @@ chown tdr.tdr /var/log/tdr/
 cronandmail ()
 {
 
+
+    # Set up so that hostname --fqdn is correct (needed for mailing)
+	sed -e "s/^\([^ \t]*\).*$HOSTNAME.*$/\1 $HOSTNAME.c7a.ca $HOSTNAME/" /etc/hosts >/etc/hosts.new
+	cat /etc/hosts.new >/etc/hosts
+
+
 	# For debugging purposes it is possible to exec into a running container and start rsyslogd to see output of cron.
 	rsyslogd
 
@@ -37,12 +43,11 @@ cronandmail ()
 	postconf mailbox_size_limit=0
 	postconf mydestination=$HOSTNAME
 	postconf masquerade_domains=c7a.ca
-	postfix start
 
-    # Set up so that hostname --fqdn is correct (needed for mailing)
-	export myhostname=`postconf myhostname | sed -e 's/.* \([^ ]*\)$/\1/'`
-	sed -e "s/^\([^ \t]*\).*$HOSTNAME.*$/\1 $myhostname $HOSTNAME/" /etc/hosts >/etc/hosts.new
-	cat /etc/hosts.new >/etc/hosts
+
+    # Finally, start postfix
+	service postfix start
+
 
 	# Cron in foreground	
 	/usr/sbin/cron -f
