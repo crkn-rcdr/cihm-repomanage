@@ -26,16 +26,23 @@ cronandmail ()
 {
 
 	# For debugging purposes it is possible to exec into a running container and start rsyslogd to see output of cron.
-    #rsyslogd
+	rsyslogd
 
 	# Postfix setup
-	# needs to be in running container so local randomly generated hostname can be in main.cf
+	# needs to be in running container so local hostname can be in main.cf
 	debconf-set-selections /home/tdr/postfix-debconf.conf
 	rm /etc/postfix/*.cf
     dpkg-reconfigure -f noninteractive postfix
-	# postconf maillog_file=/dev/stdout
+    # Some configuration not set correctly by defaults
+	postconf mailbox_size_limit=0
+	postconf mydestination=$HOSTNAME
+	postconf masquerade_domains=c7a.ca
 	postfix start
 
+    # Set up so that hostname --fqdn is correct (needed for mailing)
+	export myhostname=`postconf myhostname | sed -e 's/.* \([^ ]*\)$/\1/'`
+	sed -e "s/^\([^ \t]*\).*$HOSTNAME.*$/\1 $myhostname $HOSTNAME/" /etc/hosts >/etc/hosts.new
+	cat /etc/hosts.new >/etc/hosts
 
 	# Cron in foreground	
 	/usr/sbin/cron -f
