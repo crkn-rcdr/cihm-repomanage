@@ -32,7 +32,7 @@ cronandmail ()
 
 
 	# For debugging purposes it is possible to exec into a running container and start rsyslogd to see output of cron.
-	rsyslogd
+	# rsyslogd
 
 	# Postfix setup
 	# needs to be in running container so local hostname can be in main.cf
