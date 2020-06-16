@@ -30,11 +30,12 @@ RUN set -ex; \
 
 
 WORKDIR /home/tdr
-COPY cpanfile* *.conf /home/tdr/
+COPY Archive-BagIt-0.054.tar.gz cpanfile* *.conf /home/tdr/
 COPY aliases /etc/aliases
 
 RUN cpanm -n --installdeps . && rm -rf /root/.cpanm || \
     (cat /root/.cpanm/work/*/build.log && exit 1)
+RUN cpanm -n --reinstall /home/tdr/Archive-BagIt-0.054.tar.gz && rm -rf /root/.cpanm || (cat /root/.cpanm/work/*/build.log && exit 1)
 
 COPY CIHM-Swift CIHM-Swift
 COPY CIHM-TDR CIHM-TDR
