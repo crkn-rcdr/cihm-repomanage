@@ -22,3 +22,7 @@ requires 'AnyEvent';
 requires 'AnyEvent::Fork';
 requires 'AnyEvent::Fork::Pool';
 requires 'Furl';
+requires 'XML::LibXSLT';
+requires 'XML::LibXML';
+requires 'IO::AIO';
+requires 'IO::Socket::SSL';
