@@ -79,6 +79,17 @@ if [ "$1" = 'repomanagefrom' ]; then
 */10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-swiftreplicate --fromswift"
 RMFCRON
 	cronandmail
+elif [ "$1" = 'romano' ]; then
+# Used by Romano during refresh
+# 72000 seconds = 20 hours
+	cat <<-RCRON >>/etc/cron.d/repomanage
+# Empty the trashcans every 6 hours
+34 5,11,17,22 * * * tdr /bin/bash -c "find /cihmz*/repository/trashcan/ -mindepth 1 -maxdepth 1 -mmin +360 -exec rm -rf {} \;"
+# Replication check every 10 minutes (find work and put in queue, then run rsync to add to repository)
+*/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-swiftreplicate --fromswift --maxprocs=20"
+RCRON
+	cronandmail
+
 elif [ "$1" = 'swiftvalidate' ]; then
 # Used by Gouda to validate Swift repository
 # 43200 seconds = 12 hours
