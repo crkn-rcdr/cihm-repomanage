@@ -86,7 +86,8 @@ elif [ "$1" = 'romano' ]; then
 # Empty the trashcans every 6 hours
 34 5,11,17,22 * * * tdr /bin/bash -c "find /cihmz*/repository/trashcan/ -mindepth 1 -maxdepth 1 -mmin +360 -exec rm -rf {} \;"
 # Replication check every 10 minutes (find work and put in queue, then run rsync to add to repository)
-*/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-swiftreplicate --fromswift --maxprocs=20"
+# timelimit is 60*60*6 (6 hours) for replicating, which might help with zombies or other odd issues.
+*/10 * * * * tdr /bin/bash -c "tdr-replicationwork ; tdr-swiftreplicate --fromswift --maxprocs=20 --timelimit=21600"
 RCRON
 	cronandmail
 
