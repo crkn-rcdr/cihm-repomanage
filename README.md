@@ -5,3 +5,6 @@ This is a docker image used to manage the files on a repository host.  This incl
 
 Commands are intended to be run from cron, and need write access to the repository.
 
+
+Note:  The plan is for all of this to go away as soon as possible, and be replaced by tools managing Archivematica repositories on Swift.
+See: https://github.com/crkn-rcdr/Digital-Preservation

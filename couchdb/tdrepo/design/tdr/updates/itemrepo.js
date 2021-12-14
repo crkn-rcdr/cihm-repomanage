@@ -1,4 +1,4 @@
-module.exports = function(doc, req) {
+module.exports = function (doc, req) {
   var nowdate = new Date();
   // Javascript toISOString() includes parts of a second, which we strip.
   var nowdates = nowdate.toISOString().replace(/\..*Z/, "Z");
@@ -35,6 +35,10 @@ module.exports = function(doc, req) {
     }
     if ("filesize" in updatedoc) {
       doc["filesize"] = updatedoc["filesize"];
+      updated = true;
+    }
+    if ("nofilesize" in updatedoc) {
+      delete doc["filesize"];
       updated = true;
     }
     if ("pool" in updatedoc) {
