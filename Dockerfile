@@ -10,7 +10,7 @@ RUN groupadd -g 1117 tdr && useradd -u 1117 -g tdr -m tdr && \
     apt-get clean
 
 WORKDIR /home/tdr
-COPY Archive-BagIt-0.054.tar.gz cpanfile* *.conf /home/tdr/
+COPY Archive-BagIt-0.054.tar.gz cpanfile log4perl.conf /home/tdr/
 COPY aliases /etc/aliases
 
 RUN cpanm -n --installdeps . && rm -rf /root/.cpanm || \
